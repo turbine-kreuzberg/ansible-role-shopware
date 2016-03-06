@@ -1,0 +1,12 @@
+---
+shopware_repo_url: "https://github.com/shopware/shopware.git"
+shopware_demo_data_url: "http://releases.s3.shopware.com/test_images.zip"
+shopware_install_path: "/var/www/shopware"
+shopware_release: "5.1.2"
+shopware_db_host: "localhost"
+shopware_language: "en_GB"
+shopware_db_name: "shopware5"
+shopware_db_password: "shopware"
+shopware_db_user: "shopware"
+shopware_app_host: "33.33.33.20"
+shopware_cli_repo: "https://github.com/shopwareLabs/sw-cli-tools.git"

@@ -1,0 +1,77 @@
+repositories:
+
+  ## If you want to maintain a manual collection of repositories, you can use SimpleList
+  ## Even here you can use colors and repos / collections of plugins
+  SimpleList:
+    repositories:
+      example1:
+        color: yellow
+        plugins:
+          Core_SwagJobQueue: ## Schema: MODULE_PLUGINNAME
+            ssh: git@github.com:bcremer/SwagJobQueue.git
+            http: https://github.com/bcremer/SwagJobQueue.git
+
+general:
+  # Allows you do determine how the plugin repositories should be sorted
+  # Allowed values are:
+  #   module          Sort by module and then by name
+  #   name            Sort by name
+  #   repository      Sort by repository - and then by name
+  sortBy: repository
+
+  # Do you want to use colors in your listing?
+  enableRepositoryColors: true
+
+update:
+  pharUrl: https://shopwarelabs.github.io/sw-cli-tools/sw.phar
+  vesionUrl: https://shopwarelabs.github.io/sw-cli-tools/sw.phar.version
+  verifyPublicKey: false
+  checkOnStartup: false
+
+## the configured host will always be used
+# username, password, mail and name only apply for "release" packages
+ShopConfig:
+  host:
+  username: demo
+  password: demo
+  mail: test@example.org
+  name: "Demo admin"
+
+DatabaseConfig:
+  host: localhost
+  user: shopware
+  pass: shopware
+
+## If needed, you can change the owner of the shopware install dir
+# ChangeOwner:
+#  user: www-data
+#  group: www-data
+# SwagMigration
+## A list of sql files you want to import after shopware was set up
+# CustomDeltas:
+#  - /home/USER/setup_mail_client.sql
+#  - /home/USER/configure_shop.sql
+
+## A list of shell commands to execute after shopware was set up
+## CWD will be the shopware install dir
+# CustomScripts:
+# - ./bin/console sw:plugin:refresh
+# - ./bin/console sw:plugin:install --activate AdvancedMenu
+
+## Here you can specify a list of repositories to checkout.
+# You can specify the destination path with the "destination" field
+#
+# Warning: The "core" repository is always required - it is the main
+# shopware repo to checkout. If you want to, you can replace the ssh/http
+# urls with urls to your own repository.
+ShopwareInstallRepos:
+  core:
+    destination: /
+    ssh: git@github.com:shopware/shopware.git
+    http: https://github.com/shopware/shopware.git
+
+# @todo: whats with this repo?
+  vtm:
+    destination: /engine/Shopware/Plugins/Local/Core/vtmTest
+    ssh: git@git.votum-media.net:saw/vtmtest.git
+    http: http://git.votum-media.net/saw/vtmtest.git

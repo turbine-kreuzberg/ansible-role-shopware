@@ -1,0 +1,19 @@
+---
+- stat:
+    path: "~/bin/sw"
+  register: stat_cli_tools
+
+- include: cli-tools.yml
+  when: stat_cli_tools.stat.exists == false
+
+- stat:
+    path: "{{ shopware_install_path }}/shopware.php"
+  register: stat_shopware
+
+- name: shopware | install from repo
+  command: >
+    ~/bin/sw/sw.phar install:release -r {{ shopware_release }} -d {{ shopware_db_name }} -i {{ shopware_install_path }} -p {{ shopware_install_path }} --username {{ shopware_db_user }} --password {{ shopware_db_password }} --name demo --language {{ shopware_language }}
+    chdir={{ shopware_install_path }}
+  tags:
+    - cli-tools-install-sw
+  when: stat_shopware.stat.exists == false
