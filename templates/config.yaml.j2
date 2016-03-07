@@ -39,8 +39,8 @@ ShopConfig:
 
 DatabaseConfig:
   host: localhost
-  user: shopware
-  pass: shopware
+  user: "{{ shopware_db_user }}"
+  pass: "{{ shopware_db_password }}"
 
 ## If needed, you can change the owner of the shopware install dir
 # ChangeOwner:
