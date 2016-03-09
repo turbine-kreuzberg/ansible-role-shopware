@@ -1,0 +1,16 @@
+---
+- name: swtools | copy swtools binary file
+  copy:
+    src: files/sw.phar
+    dest: "{{ shopware_swtools_binary_path }}"
+    mode: "0755"
+
+- name: swtools | create config dir
+  file:
+    path: "~/.config/sw-cli-tools"
+    state: directory
+
+- name: swtools | copy config file
+  template:
+    src: "config.yaml.j2"
+    dest: "~/.config/sw-cli-tools/config.yaml"

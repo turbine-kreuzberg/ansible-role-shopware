@@ -1,0 +1,6 @@
+---
+- name: install shopware | install from repo
+  command: "{{ shopware_swtools_binary_path }} install:release -r {{ shopware_version }} -d {{ shopware_db_name }} -i {{ shopware_install_path }} -p {{ shopware_install_path }} --username {{ shopware_admin_user }} --password {{ shopware_admin_password }} --name '{{ shopware_admin_name }}' --mail {{ shopware_admin_email }} --language {{ shopware_language }}"
+  args:
+    chdir: "{{ shopware_install_path }}"
+    creates: "{{ shopware_install_path }}/shopware.php"

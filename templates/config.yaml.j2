@@ -38,7 +38,7 @@ ShopConfig:
   name: "Demo admin"
 
 DatabaseConfig:
-  host: localhost
+  host: "{{ shopware_db_host }}"
   user: "{{ shopware_db_user }}"
   pass: "{{ shopware_db_password }}"
 
