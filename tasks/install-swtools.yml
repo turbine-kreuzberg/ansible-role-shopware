@@ -1,5 +1,5 @@
 ---
-cd- name: swtools | copy swtools binary file
+- name: swtools | copy swtools binary file
   copy:
     src: files/sw.phar
     dest: "{{ shopware_swtools_binary_path }}"

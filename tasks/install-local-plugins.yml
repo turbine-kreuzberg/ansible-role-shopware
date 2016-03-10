@@ -1,0 +1,17 @@
+---
+- name: install local plugins | refresh
+  command: ./bin/console sw:plugin:refresh
+  args:
+    chdir: "{{ shopware_install_path }}"
+  register: command_result
+  failed_when: "'PHP Fatal error' in command_result.stderr"
+  changed_when: false
+
+- name: install local plugins | install and activate locally available plugins
+  command: ./bin/console sw:plugin:install {{ item }} --activate
+  args:
+    chdir: "{{ shopware_install_path }}"
+  with_items: "{{ shopware_local_plugins }}"
+  register: command_result
+  failed_when: "'PHP Fatal error' in command_result.stderr or 'was not found' in command_result.stdout or 'Unable to install' in command_result.stderr"
+  changed_when: "'{{ item }} is already installed' not in command_result.stdout"

@@ -1,6 +1,6 @@
 ---
 shopware_repo_url: "https://github.com/shopware/shopware.git"
-shopware_demo_data_url: "http://releases.s3.shopware.com/test_images.zip"
+shopware_install_demo_data: true
 shopware_install_path: "/var/www/shopware"
 shopware_base_uri: "shopware.dev"
 shopware_base_url: "http://{{ shopware_base_uri }}/"
@@ -13,13 +13,13 @@ shopware_admin_user: "shopware"
 shopware_admin_password: "shopware"
 shopware_admin_name: "shopware"
 shopware_admin_email: "admin@shopware.dev"
-shopware_language: "en_GB"
+shopware_language: "de_DE"
 shopware_cli_repo: "https://github.com/shopwareLabs/sw-cli-tools.git"
 shopware_id: "yourid"
 shopware_license_password: "yourlicensepassword"
 shopware_swtools_binary_path: "~/bin/sw"
-# put here vtm plugins and plugins from shopware core
 shopware_local_plugins: []
-# put in here plugins that have to be downloaded
 shopware_remote_plugins: []
+shopware_remote_plugins_demo_data:
+  - SwagDemoDataDE
 shopware_licenses: []
