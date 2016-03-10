@@ -4,3 +4,6 @@
   args:
     chdir: "{{ shopware_install_path }}"
     creates: "{{ shopware_install_path }}/shopware.php"
+
+- name: install shopware | satisfy composer dependencies
+  composer: "command=install working_dir={{ shopware_install_path }}"
