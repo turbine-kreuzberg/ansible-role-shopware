@@ -65,7 +65,7 @@ A sample playbook might look like that:
         - { role: php }
         - { role: php-ioncube }
         - { role: composer }
-        - { role: app, ansible_become: yes, ansible_become_method: sudo, ansible_become_user: www-data }
+        - { role: app, ansible_become: yes, ansible_become_user: www-data }
 ```
 
 License
