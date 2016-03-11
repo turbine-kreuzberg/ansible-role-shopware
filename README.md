@@ -1,42 +1,72 @@
-Role Name
-=========
+votum.shopware
+==============
 
-A brief description of the role goes here.
+This role installs the Shopware ecommerce system. It' s also possible to install Shopware plugins.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role needs a working webserver with a pre-configured virtual host.
+PHP >= v5.4
+composer
+Ioncube encoder
+MySQL database
+write permissions on the directory defined in `shopware_install_path`
 
 Role Variables
 --------------
 
 The role uses variables, that you can also override:
 
-* `shopware_repo_url` - repo to checkout. Default: `https://github.com/ShopwareAG/shopware-4.git`.
-* `shopware_demo_data_url` - demo data:. Default: `http://releases.s3.shopware.com/demo_4.2.0.zip`
-* `shopware_install_path` - `/var/www/shopware` by default.
-* `shopware_db_host` - `localhost` by default.
-* `shopware_db_name` - `shopware` by default.
-* `shopware_db_password` - `shopware` by default.
-* `shopware_db_user` - `shopware` by default.
-* `shopware_app_path` - `/shopware` by default.
-* `shopware_app_host` - `33.33.33.20` by default.
+* `shopware_repo_url` - repo for shopware sources. Default: `https://github.com/shopware/shopware.git`
+* `shopware_install_demo_data` - should demo data be installed. Default: `true`
+* `shopware_dev_mode` - when dev_mode is enabled all the additional dev dependencies of composer will be installed. Default: `false`
+* `shopware_install_path` - the target installation path. Default: `/var/www/shopware`
+* `shopware_base_uri` - the base URI which is basically the domain name. Default: `shopware.dev`
+* `shopware_base_url` - the base URL of the shop - which is basically the base_uri plus a protocol. Default: `http://shopware.dev/`
+* `shopware_version` - the shopware version to be installed. Default: `5.1.3`
+* `shopware_db_host` - the database host. Default: `localhost`
+* `shopware_db_user` - the database user. Default: `root`
+* `shopware_db_password` - the database password. Default: `root`
+* `shopware_db_name` - the database name. Default: `shopware5`
+* `shopware_admin_user` - the Shopware admin user name. Default: `shopware`
+* `shopware_admin_password` - the Shopware admin password. Default: `shopware`
+* `shopware_admin_name` - the Shopware's admin full name. Default: `shopware`
+* `shopware_admin_emai` - the Shopware's admin email. Default: `admin@shopware.dev`
+* `shopware_language` - the default language (can be either de_DE or en_GB). Default: `de_DE`
+* `shopware_cli_repo` - git repo for the shopware cli tool. Default: `https://github.com/shopwareLabs/sw-cli-tools.git`
+* `shopware_id` - if you have a Shopware ID put it here. Default: `yourid`
+* `shopware_license_password` - the password for your Shopware ID. Default: `yourlicensepassword`
+* `shopware_swtools_binary_path` - the path where the swtools binary will be downloaded to. Default: `~/bin/sw`
+* `shopware_local_plugins` - if you have local plugins that you want to have installed, they should go into this list. empty by default
+* `shopware_remote_plugins` - if you want to have plugins installed, put them in this list. empty by default
+* `shopware_remote_plugins_demo_data` - the demodata plugins that you want to install via `shopware_install_demo_data`. Default: `- SwagDemoDataDE` Be aware that this also needs to be a list.
+* `shopware_licenses` - a list of files containing licences that belong to the plugins configured under `shopware_remote_plugins`
 
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+A sample playbook might look like that:
 
-    - hosts: servers
+```yaml
+    - hosts: all
+      become: yes
+      vars_files:
+        - vars/all.yml
+    
       roles:
-         - { role: username.rolename, x: 42 }
+        - { role: apache }
+        - { role: mysql }
+        - { role: php }
+        - { role: php-ioncube }
+        - { role: composer }
+        - { role: app, ansible_become: yes, ansible_become_method: sudo, ansible_become_user: www-data }
+```
 
 License
 -------
@@ -46,4 +76,5 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+VOTUM GmbH
+info@votum.de
