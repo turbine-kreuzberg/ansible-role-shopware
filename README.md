@@ -6,12 +6,12 @@ This role installs the Shopware ecommerce system. It' s also possible to install
 Requirements
 ------------
 
-This role needs a working webserver with a pre-configured virtual host.
-PHP >= v5.4
-composer
-Ioncube encoder
-MySQL database
-write permissions on the directory defined in `shopware_install_path`
+This role needs a working webserver with a pre-configured virtual host. And also:
+* PHP >= v5.4
+* composer
+* Ioncube encoder
+* MySQL database
+* write permissions on the directory defined in `shopware_install_path`
 
 Role Variables
 --------------
@@ -24,7 +24,7 @@ The role uses variables, that you can also override:
 * `shopware_install_path` - the target installation path. Default: `/var/www/shopware`
 * `shopware_base_uri` - the base URI which is basically the domain name. Default: `shopware.dev`
 * `shopware_base_url` - the base URL of the shop - which is basically the base_uri plus a protocol. Default: `http://shopware.dev/`
-* `shopware_version` - the shopware version to be installed. Default: `5.1.3`
+* `shopware_version` - the shopware version to be installed (i.e. `5.1.3`). Default: `latest`
 * `shopware_db_host` - the database host. Default: `localhost`
 * `shopware_db_user` - the database user. Default: `root`
 * `shopware_db_password` - the database password. Default: `root`

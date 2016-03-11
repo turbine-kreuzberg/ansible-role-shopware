@@ -5,7 +5,7 @@ shopware_dev_mode: false
 shopware_install_path: "/var/www/shopware"
 shopware_base_uri: "shopware.dev"
 shopware_base_url: "http://{{ shopware_base_uri }}/"
-shopware_version: "5.1.3"
+shopware_version: "latest"
 shopware_db_host: "localhost"
 shopware_db_user: "root"
 shopware_db_password: "root"
