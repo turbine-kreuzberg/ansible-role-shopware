@@ -1,0 +1,9 @@
+---
+- name:  download remote plugin(s)
+  command: ./bin/console sw:store:download --username {{ shopware_id }} --password {{ shopware_license_password }} --shopware-version {{ shopware_version }} --domain {{ shopware_base_uri }} {{ item }}
+  args:
+    chdir: "{{ shopware_install_path }}"
+  with_items: "{{ plugins }}"
+  register: command_result
+  failed_when: "'PHP Fatal error' in command_result.stderr or 'Plugin {{ item }} not found' in command_result.stdout"
+  changed_when: "'No update available for plugin' not in command_result.stdout"

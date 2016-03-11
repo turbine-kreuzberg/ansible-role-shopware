@@ -1,0 +1,8 @@
+---
+- name: refresh plugins
+  command: ./bin/console sw:plugin:refresh
+  args:
+    chdir: "{{ shopware_install_path }}"
+  register: command_result
+  failed_when: "'PHP Fatal error' in command_result.stderr"
+  changed_when: false

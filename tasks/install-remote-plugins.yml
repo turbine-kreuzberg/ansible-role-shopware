@@ -9,22 +9,11 @@
     remote_plugins: "{{ shopware_remote_plugins }}"
   when: not shopware_install_demo_data
 
-- name:  install remote plugins | download plugins
-  command: ./bin/console sw:store:download --username {{ shopware_id }} --password {{ shopware_license_password }} --shopware-version {{ shopware_version }} --domain {{ shopware_base_uri }} {{ item }}
-  args:
-    chdir: "{{ shopware_install_path }}"
-  with_items: "{{ remote_plugins }}"
-  register: command_result
-  failed_when: "'PHP Fatal error' in command_result.stderr"
-  changed_when: "'No update available for plugin' not in command_result.stdout"
+- include: download-plugins.yml
+  vars:
+    plugins: "{{ remote_plugins }}"
 
-- name: install remote plugins | refresh plugins
-  command: ./bin/console sw:plugin:refresh
-  args:
-    chdir: "{{ shopware_install_path }}"
-  register: command_result
-  failed_when: "'PHP Fatal error' in command_result.stderr"
-  changed_when: false
+- include: refresh-plugins.yml
 
 - name: install remote plugins | clear cache
   command: ./var/cache/clear_cache.sh
@@ -33,11 +22,6 @@
   failed_when: "'PHP Fatal error' in command_result.stderr"
   changed_when: false
 
-- name: install remote plugins | install and activate remote plugins
-  command: ./bin/console sw:plugin:install {{ item }} --activate
-  args:
-    chdir: "{{ shopware_install_path }}"
-  with_items: "{{ remote_plugins }}"
-  register: command_result
-  failed_when: "'PHP Fatal error' in command_result.stderr or 'was not found' in command_result.stdout or 'Unable to install' in command_result.stderr"
-  changed_when: "'{{ item }} is already installed' not in command_result.stdout"
+- include: install-and-activate-plugins.yml
+  vars:
+    plugins: "{{ remote_plugins }}"

@@ -1,6 +1,7 @@
 ---
 shopware_repo_url: "https://github.com/shopware/shopware.git"
 shopware_install_demo_data: true
+shopware_dev_mode: false
 shopware_install_path: "/var/www/shopware"
 shopware_base_uri: "shopware.dev"
 shopware_base_url: "http://{{ shopware_base_uri }}/"

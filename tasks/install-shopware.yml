@@ -6,4 +6,4 @@
     creates: "{{ shopware_install_path }}/shopware.php"
 
 - name: install shopware | satisfy composer dependencies
-  composer: "command=install working_dir={{ shopware_install_path }}"
+  composer: "command=install working_dir={{ shopware_install_path }} no_dev={{ (shopware_dev_mode == true) | ternary('no','yes') }}"

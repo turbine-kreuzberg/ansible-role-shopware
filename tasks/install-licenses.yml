@@ -1,33 +1,17 @@
 ---
-- name: install licenses | refresh plugins
-  command: ./bin/console sw:plugin:refresh
-  args:
-    chdir: "{{ shopware_install_path }}"
-  register: command_result
-  failed_when: "'PHP Fatal error' in command_result.stderr"
-  changed_when: false
+- include: refresh-plugins.yml
 
-- name: install licenses | download SwagLicense plugin
-  command: ./bin/console sw:store:download --username {{ shopware_id }} --password {{ shopware_license_password }} --shopware-version {{ shopware_version }} --domain {{ shopware_base_uri }} SwagLicense
-  args:
-      chdir: "{{ shopware_install_path }}"
-      creates: "{{ shopware_install_path }}/engine/Shopware/Plugins/Community/Core/SwagLicense/plugin.json"
+- include: download-plugins.yml
+  vars:
+    plugins:
+      - SwagLicense
 
-- name: install licenses | refresh plugins
-  command: ./bin/console sw:plugin:refresh
-  args:
-    chdir: "{{ shopware_install_path }}"
-  register: command_result
-  failed_when: "'PHP Fatal error' in command_result.stderr"
-  changed_when: false
+- include: refresh-plugins.yml
 
-- name: install licenses | install and activate SwagLicense plugin
-  command: ./bin/console sw:plugin:install SwagLicense --activate
-  args:
-    chdir: "{{ shopware_install_path }}"
-  register: command_result
-  failed_when: "'PHP Fatal error' in command_result.stderr or 'was not found' in command_result.stdout or 'Unable to install' in command_result.stderr"
-  changed_when: "'SwagLicense is already installed' not in command_result.stdout"
+- include: install-and-activate-plugins.yml
+  vars:
+    plugins:
+      - SwagLicense
 
 - name: install licenses | copy license files
   copy:
