@@ -32,7 +32,7 @@ The role uses variables, that you can also override:
 * `shopware_admin_user` - the Shopware admin user name. Default: `shopware`
 * `shopware_admin_password` - the Shopware admin password. Default: `shopware`
 * `shopware_admin_name` - the Shopware's admin full name. Default: `shopware`
-* `shopware_admin_emai` - the Shopware's admin email. Default: `admin@shopware.dev`
+* `shopware_admin_email` - the Shopware's admin email. Default: `admin@shopware.dev`
 * `shopware_language` - the default language (can be either de_DE or en_GB). Default: `de_DE`
 * `shopware_cli_repo` - git repo for the shopware cli tool. Default: `https://github.com/shopwareLabs/sw-cli-tools.git`
 * `shopware_id` - if you have a Shopware ID put it here. Default: `yourid`
@@ -65,7 +65,7 @@ A sample playbook might look like that:
         - { role: php }
         - { role: php-ioncube }
         - { role: composer }
-        - { role: app, ansible_become: yes, ansible_become_user: www-data }
+        - { role: votum.shopware, ansible_become: yes, ansible_become_user: www-data }
 ```
 
 License
