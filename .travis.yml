@@ -8,15 +8,14 @@ sudo: required
 env:
   - SITE=test.yml
 
-addons:
-  apt:
-    packages:
-      - curl
-      - ansible
-
 services: mysql
 
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install curl python
+
 install:
+  - pip install ansible
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 
 
