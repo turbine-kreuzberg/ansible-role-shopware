@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  vars:
+    - shopware_install_path: "%TRAVIS_BUILD_DIR%"
+    - shopware_base_uri: 127.0.0.1
+    - shopware_db_host: 127.0.0.1
+    - shopware_db_user: root
+    - shopware_db_password:
+
+  pre_tasks:
+    - name: create shopware db
+      mysql_db: name={{ shopware_db_name }} state=present login_user={{ shopware_db_user }} login_password={{ shopware_db_password }}
+
+  roles:
+    - { role: ansible-role-shopware }

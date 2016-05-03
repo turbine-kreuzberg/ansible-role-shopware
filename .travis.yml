@@ -1,0 +1,44 @@
+---
+sudo: required
+language: php
+php:
+  - '5.6'
+
+env:
+  - SITE=test.yml
+
+addons:
+  apt:
+    packages:
+      - curl
+
+services: mysql
+
+install:
+  - pip install ansible
+  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
+
+
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - sudo a2enmod rewrite actions fastcgi alias
+  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+  - sudo cp -f tests/travis-ci-apache /etc/apache2/sites-available/default
+  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+  - sudo service apache2 restart
+
+script:
+  - "ansible-playbook -i tests/inventory tests/$SITE --syntax-check"
+  - "ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo"
+  - >
+    ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+  - curl -L -s http://127.0.0.1/ | grep 'Shopware&#x20;Demo'
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

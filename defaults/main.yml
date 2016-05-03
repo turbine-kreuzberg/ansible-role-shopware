@@ -18,7 +18,8 @@ shopware_language: de_DE
 shopware_cli_repo: "https://github.com/shopwareLabs/sw-cli-tools.git"
 shopware_id: yourid
 shopware_license_password: yourlicensepassword
-shopware_swtools_binary_path: "~/bin/sw"
+shopware_swtools_binary_folder: "~/bin"
+shopware_swtools_binary_path: "{{ shopware_swtools_binary_folder }}/sw"
 shopware_local_plugins: []
 shopware_remote_plugins: []
 shopware_remote_plugins_demo_data:
