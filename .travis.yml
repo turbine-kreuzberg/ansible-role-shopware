@@ -12,12 +12,11 @@ addons:
   apt:
     packages:
       - curl
+      - ansible
 
 services: mysql
 
 install:
-  - pip install --upgrade pip
-  - pip install ansible
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 
 
