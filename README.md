@@ -1,7 +1,8 @@
-votum.shopware
-==============
+Ansible Role: votum.shopware
+============================
+[![Build Status](https://travis-ci.org/votum/ansible-role-shopware.svg?branch=master)](https://travis-ci.org/votum/ansible-role-shopware)
 
-This role installs the Shopware ecommerce system. It' s also possible to install Shopware plugins.
+This role installs Shopware eCommerce Software.
 
 Requirements
 ------------
