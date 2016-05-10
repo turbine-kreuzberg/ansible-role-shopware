@@ -6,7 +6,6 @@ services:
 
 env:
   DOCKER_COMPOSE_VERSION: 1.6.0
-  DOCKER_COMPOSE_CALL_PATH: 'docker-compose --file tests/docker-compose.yml'
   SITE: test.yml
 
 before_install:
@@ -21,12 +20,12 @@ install:
 before_script:
   - 'pwd'
   - 'ls -asl .'
-  - '${DOCKER_COMPOSE_CALL_PATH} up -d'
+  - 'docker-compose --file tests/docker-compose.yml up -d'
   # wait for mysql service to become available
   - 'while ! echo exit | nc localhost 43306; do sleep 2; done'
 
 script:
-  - 'container_id=$( ${DOCKER_COMPOSE_CALL_PATH} ps -q | sed -n 2p )'
+  - 'container_id=$( docker-compose --file tests/docker-compose.yml ps -q | sed -n 2p )'
 
   # Ansible syntax check.
   - 'sudo docker exec --tty ${container_id} env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${SITE} --syntax-check'
@@ -38,9 +37,9 @@ script:
   - 'sudo docker exec --tty ${container_id} env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${SITE}'
 
   # Clean up
-  - ' ${DOCKER_COMPOSE_CALL_PATH} stop"'
+  - 'docker-compose --file tests/docker-compose.yml stop'
 
-  - ' ${DOCKER_COMPOSE_CALL_PATH} rm -f"'
+  - 'docker-compose --file tests/docker-compose.yml rm -f'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
