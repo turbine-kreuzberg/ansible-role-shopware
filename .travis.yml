@@ -19,6 +19,8 @@ install:
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 
 before_script:
+  - 'pwd'
+  - 'ls -asl .'
   - '${DOCKER_COMPOSE_CALL_PATH} up -d'
   # wait for mysql service to become available
   - 'while ! echo exit | nc localhost 43306; do sleep 2; done'
