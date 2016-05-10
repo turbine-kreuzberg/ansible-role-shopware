@@ -1,89 +1,45 @@
 ---
----
 sudo: required
-
-env:
-  - DOCKER_COMPOSE_VERSION: 1.6.0
-    distribution: ubuntu
-    version: 14.04
-    init: /sbin/init
-    run_opts: "--privileged=true"
-    playbook: test.yml
 
 services:
   - docker
 
-before_install:
-  # Pull container
-  - 'sudo docker pull ${distribution}:${version}'
-  # Customize container
-  - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
-
-script:
-  - 'container_id=$(mktemp)'
-    # Run container in detached state
-  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
-
-  # Ansible syntax check.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${playbook} --syntax-check'
-
-  # Test role.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${playbook}'
-
-  # Test role idempotence.
-  - 'sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/${playbook}'
-
-  # Clean up
-  - 'sudo docker stop "$(cat ${container_id})"'
-
-notifications:
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/
-
-
-
-
-
-
-
-
-
-sudo: required
-language: python
-python: "2.7"
-
 env:
-  - SITE=test.yml
-
-services: mysql
+  DOCKER_COMPOSE_VERSION: 1.6.0
+  DOCKER_COMPOSE_CALL_PATH: 'docker-compose --file tests/docker-compose.yml'
+  SITE: test.yml
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install curl
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 
 install:
   - pip install ansible
-  - pip install MySQL-python
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-  - ansible-galaxy install geerlingguy.php geerlingguy.php-mysql
-
 
 before_script:
-  - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
-  - sudo a2enmod rewrite actions fastcgi alias
-  - sudo cp -f tests/travis-ci-apache /etc/apache2/sites-available/default
-  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-  - sudo service apache2 restart
+  - '${DOCKER_COMPOSE_CALL_PATH} up -d'
+  # wait for mysql service to become available
+  - 'while ! echo exit | nc localhost 43306; do sleep 2; done'
 
 script:
-  - "ansible-playbook -i tests/inventory tests/$SITE --syntax-check"
-  - "ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo"
-  - >
-    ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
-  - curl -L -s http://127.0.0.1/ | grep 'Shopware&#x20;Demo'
+  - 'container_id=$( ${DOCKER_COMPOSE_CALL_PATH} ps -q | sed -n 2p )'
+
+  # Ansible syntax check.
+  - 'sudo docker exec --tty ${container_id} env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${SITE} --syntax-check'
+
+  # Test role.
+  - 'sudo docker exec --tty ${container_id} env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${SITE}'
+
+  # Test role idempotence.
+  - 'sudo docker exec --tty ${container_id} env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${SITE}'
+
+  # Clean up
+  - ' ${DOCKER_COMPOSE_CALL_PATH} stop"'
+
+  - ' ${DOCKER_COMPOSE_CALL_PATH} rm -f"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
