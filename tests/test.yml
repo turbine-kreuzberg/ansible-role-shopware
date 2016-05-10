@@ -1,19 +1,49 @@
 ---
 - hosts: localhost
-  remote_user: root
+  remote_user: www-data
+
+  become: yes
+  become_user: www-data
 
   vars:
-    - shopware_install_path: "%TRAVIS_BUILD_DIR%"
-    - shopware_base_uri: 127.0.0.1
-    - shopware_db_host: 127.0.0.1
-    - shopware_db_user: root
-    - shopware_db_password:
+    - shopware_install_path: /app
+    - shopware_base_uri: localhost
+    - shopware_db_host: db
+    - shopware_db_user: shopware
+    - shopware_db_password: shopware
+    - shopware_swtools_binary_folder: "/app/bin"
 
   pre_tasks:
-    - name: create shopware db
-      mysql_db: name={{ shopware_db_name }} state=present login_user={{ shopware_db_user }} login_password={{ shopware_db_password }}
+    - file:
+        path: /app
+        group: www-data
+        owner: www-data
+      become_user: root
+
+    - file:
+        path: /var/www
+        group: www-data
+        owner: www-data
+      become_user: root
+
+    - name: create bin folder for sw tools
+      file:
+        path: "{{ shopware_swtools_binary_folder }}"
+        state: directory
 
   roles:
-    - { role: geerlingguy.php }
-    - { role: geerlingguy.php-mysql }
-    - { role: ansible-role-shopware }
+    - { role: role_under_test }
+
+  post_tasks:
+
+    - name: clear caches
+      shell: "rm -rf {{ shopware_install_path }}/var/cache/production_*"
+      become_user: root
+
+    - name: test home page
+      shell: >
+          curl -L -s http://{{ shopware_base_uri }} | grep 'Shopware&#x20;Demo'
+
+    - name: test my account page
+      shell: >
+          curl -L -s http://{{ shopware_base_uri }}/account | grep 'Ich bin Neukunde'

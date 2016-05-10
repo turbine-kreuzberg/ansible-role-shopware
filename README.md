@@ -68,6 +68,15 @@ A sample playbook might look like that:
         - { role: votum.shopware, ansible_become: yes, ansible_become_user: www-data }
 ```
 
+Testing
+-------
+
+Run tests locally with:
+```bash
+    ansible-playbook -i tests/inventory tests/run_test_local.yml --connection=local
+```
+
+
 License
 -------
 

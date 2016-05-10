@@ -3,8 +3,8 @@
 
 - include: install-shopware.yml
 
-- include: install-licenses.yml
+#- include: install-licenses.yml
 
-- include: install-local-plugins.yml
+#- include: install-local-plugins.yml
 
-- include: install-remote-plugins.yml
+#- include: install-remote-plugins.yml
