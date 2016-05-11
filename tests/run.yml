@@ -11,9 +11,15 @@
 
     - name: playbook syntax check
       command: "ansible-playbook /etc/ansible/roles/role_under_test/tests/{{ playbook }} --syntax-check"
+      register: command_result
+      changed_when: "'foobarbazzz' in command_result.stdout"
 
     - name: run playbook
       command: "ansible-playbook /etc/ansible/roles/role_under_test/tests/{{ playbook }}"
+      register: command_result
+      changed_when: "'foobarbazzz' in command_result.stdout"
 
     - name: run playbook second time (idempotency check)
       command: "ansible-playbook /etc/ansible/roles/role_under_test/tests/{{ playbook }}"
+      register: command_result
+      changed_when: "'foobarbazzz' in command_result.stdout"
