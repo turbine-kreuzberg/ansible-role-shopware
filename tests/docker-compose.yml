@@ -1,38 +1,31 @@
----
-version: '2'
-services:
-  db:
-    image: mysql/mysql-server:5.6
-    environment:
-      MYSQL_DATABASE: shopware5
-      MYSQL_USER: shopware
-      MYSQL_PASSWORD: shopware
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-  base:
-    command: /bin/true
-    build: .
-    volumes:
-      - /app
-  web:
-    image: tests_base
-    hostname: ansible-shopware
-    domainname: ansible-shopware.vm
-    volumes_from:
-      - base
-    depends_on:
-      - db
-    links:
-      - db
-  test:
-    image: tests_base
-    command: ansible-playbook /etc/ansible/roles/role_under_test/tests/run.yml
-    hostname: ansible-test
-    volumes:
-      - ..:/etc/ansible/roles/role_under_test:rw
-    volumes_from:
-      - base
-    depends_on:
-      - web
-    links:
-      - db
-      - web
+db:
+  image: mysql/mysql-server:5.6
+  environment:
+    MYSQL_DATABASE: shopware5
+    MYSQL_USER: shopware
+    MYSQL_PASSWORD: shopware
+    MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+base:
+  command: /bin/true
+  build: .
+  volumes:
+    - /app
+web:
+  image: tests_base
+  hostname: ansible-shopware
+  domainname: ansible-shopware.vm
+  volumes_from:
+    - base
+  links:
+    - db
+test:
+  image: tests_base
+  command: ansible-playbook /etc/ansible/roles/role_under_test/tests/run.yml
+  hostname: ansible-test
+  volumes:
+    - ..:/etc/ansible/roles/role_under_test:rw
+  volumes_from:
+    - base
+  links:
+    - db
+    - web
