@@ -15,8 +15,8 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - docker-compose build
-  - docker.compose run test
+  - docker-compose --file=tests/docker-compose.yml build
+  - docker-compose --file=tests/docker-compose.yml run test
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
