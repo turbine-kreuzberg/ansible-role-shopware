@@ -19,6 +19,8 @@ services:
     domainname: ansible-shopware.vm
     volumes_from:
       - base
+    depends_on:
+      - db
     links:
       - db
   test:
@@ -29,6 +31,8 @@ services:
       - ..:/etc/ansible/roles/role_under_test:rw
     volumes_from:
       - base
+    depends_on:
+      - web
     links:
       - db
       - web
