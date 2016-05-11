@@ -7,7 +7,7 @@
 
   vars:
     - shopware_install_path: /app
-    - shopware_base_uri: localhost
+    - shopware_base_uri: web
     - shopware_db_host: db
     - shopware_db_user: shopware
     - shopware_db_password: shopware

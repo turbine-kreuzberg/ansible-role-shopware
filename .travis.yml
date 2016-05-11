@@ -14,32 +14,9 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 
-install:
-  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-
-before_script:
-  - 'pwd'
-  - 'ls -asl .'
-  - 'docker-compose --file tests/docker-compose.yml up -d'
-  # wait for mysql service to become available
-  - 'while ! echo exit | nc localhost 43306; do sleep 2; done'
-
 script:
-  - 'container_id=$( docker-compose --file tests/docker-compose.yml ps -q | sed -n 2p )'
-
-  # Ansible syntax check.
-  - 'sudo docker exec --tty ${container_id} env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${SITE} --syntax-check'
-
-  # Test role.
-  - 'sudo docker exec --tty ${container_id} env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${SITE}'
-
-  # Test role idempotence.
-  - 'sudo docker exec --tty ${container_id} env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${SITE}'
-
-  # Clean up
-  - 'docker-compose --file tests/docker-compose.yml stop'
-
-  - 'docker-compose --file tests/docker-compose.yml rm -f'
+  - docker-compose build
+  - docker.compose run test
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

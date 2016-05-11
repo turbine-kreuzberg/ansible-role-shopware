@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+
+  vars:
+    playbook: test.yml
+
+  pre_tasks:
+
+    - name: wait for mysql-service to become available
+      wait_for: host=db port=3306 delay=2
+
+    - name: playbook syntax check
+      command: "ansible-playbook /etc/ansible/roles/role_under_test/tests/{{ playbook }} --syntax-check"
+
+    - name: run playbook
+      command: "ansible-playbook /etc/ansible/roles/role_under_test/tests/{{ playbook }}"
+
+    - name: run playbook second time (idempotentency check)
+      command: "ansible-playbook /etc/ansible/roles/role_under_test/tests/{{ playbook }}"
