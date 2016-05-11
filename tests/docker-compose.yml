@@ -19,21 +19,16 @@ services:
     domainname: ansible-shopware.vm
     volumes_from:
       - base
-    depends_on:
-      - db
     links:
       - db
   test:
     image: tests_base
+    command: ansible-playbook /etc/ansible/roles/role_under_test/tests/run.yml
     hostname: ansible-test
     volumes:
       - ..:/etc/ansible/roles/role_under_test:rw
     volumes_from:
       - base
-    depends_on:
-      - db
-      - web
     links:
       - db
       - web
-    command: ansible-playbook /etc/ansible/roles/role_under_test/tests/run.yml

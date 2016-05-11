@@ -15,5 +15,5 @@
     - name: run playbook
       command: "ansible-playbook /etc/ansible/roles/role_under_test/tests/{{ playbook }}"
 
-    - name: run playbook second time (idempotentency check)
+    - name: run playbook second time (idempotency check)
       command: "ansible-playbook /etc/ansible/roles/role_under_test/tests/{{ playbook }}"
